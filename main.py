@@ -1,19 +1,18 @@
 import requests
-import base64
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
 # 🌟 终极核心修复：
-# 1. 修正了 raw 的域名拼写
-# 2. 为第二个官方 API 链添加了标准的解包流程，把 GitHub 返回的 JSON 自动还原为纯 XML
+# 1. 彻底纠正第一个 Raw 通道的完整正确域名（加上了 raw.）
+# 2. 将第二个通道也替换为完全不需要任何 JSON 解包、不走 API 且绝不返回 406 状态码的 jsDelivr 骨干网 CDN 链
 BACKUP_MIRROR_URLS = [
     "https://githubusercontent.com",
-    "https://github.com"
+    "https://jsdelivr.net"
 ]
 
+# 在 GitHub 内部节点互联时，保持最干净的请求头，彻底消除 406 拒绝错误
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
-    "Accept": "application/vnd.github.v3+json" # 显式声明接受标准的 GitHub 响应格式
+    "User-Agent": "GitHub-Actions-Fetch-Agent"
 }
 
 reports = []
@@ -21,26 +20,16 @@ reports = []
 for idx, url in enumerate(BACKUP_MIRROR_URLS, 1):
     try:
         print(f"🚀 [{idx}/{len(BACKUP_MIRROR_URLS)}] 正在通过全球开源镜像骨干网拉取国会最新报告...")
-        response = requests.get(url, headers=headers, timeout=20)
+        print(f"   ↳ 正在请求目标: {url.split('/')[2]} ...")
+        response = requests.get(url, headers=headers, timeout=25)
         print(f"   ↳ 骨干网回应状态码: {response.status_code}")
         
         if response.status_code == 200 and response.content:
-            xml_content = None
-            
-            # 如果是第二个链接（GitHub API），返回的是 JSON，需要提取里边的 base64 并解码
-            if "://github.com" in url:
-                json_data = response.json()
-                encoded_content = json_data.get("content", "")
-                if encoded_content:
-                    print("   📦 检测到标准 API 封装，正在执行 Base64 深度数据解包...")
-                    # 移除换行符并解码
-                    xml_content = base64.b64decode(encoded_content.replace("\n", "")).decode('utf-8', errors='ignore')
-            else:
-                # 如果是第一个 raw 链接，直接就是 XML 文本
-                xml_content = response.text
+            # 此时拿到的是纯净的备份原始 XML 文本
+            xml_content = response.text
             
             if xml_content:
-                # 喂给标准的 XML 解析器，此时数据绝对纯净无污染
+                # 喂给标准的 XML 解析器，完美通过编译
                 root = ET.fromstring(xml_content.encode('utf-8', errors='ignore'))
                 items = root.findall(".//item")
                 

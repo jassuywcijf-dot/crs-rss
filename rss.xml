@@ -4,12 +4,12 @@
   <title>美国国会研究处 (CRS) 最新报告</title>
   <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 13:01:54 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 13:04:01 GMT</lastBuildDate>
   <item>
-   <title>【数据下发稍有延迟】正在进行下一次自动同步，当前时间：2026-09-11 13:01:54</title>
+   <title>【数据同步提示】美国国会报告自动同步中，当前时间：2026-09-11 13:04:01</title>
    <link>https://congress.gov</link>
-   <guid isPermaLink="false">DELAY_RETRY</guid>
-   <pubDate>Fri, 11 Sep 2026 13:01:54 GMT</pubDate>
+   <guid isPermaLink="false">SYNCing</guid>
+   <pubDate>Fri, 11 Sep 2026 13:04:01 GMT</pubDate>
    <description>脚本正在自适应重试中，请刷新页面或等待下一次定时任务执行。</description>
   </item>
  </channel>

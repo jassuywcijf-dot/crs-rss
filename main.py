@@ -1,9 +1,10 @@
 import requests
+import re
+import html
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-# 🌟 终极终结者方案：通过高可用的跨国公开代理，直接请求国会官方的原始 RSS 页面
-# 这能 100% 抹除 GitHub Actions 的机房 IP 痕迹，彻底避开 403 封锁
+# 专用跨国公开安全代理，直接请求国会官方原始 RSS 页面
 PROXY_URLS = [
     "https://allorigins.win",
     "https://corsproxy.io"
@@ -15,21 +16,38 @@ headers = {
 
 reports = []
 
+# 安全的特殊字符深度清洗工具，防止非标准 XML 导致解析器崩溃
+def clean_xml_string(raw_bytes):
+    try:
+        text = raw_bytes.decode('utf-8', errors='ignore')
+    except Exception:
+        text = str(raw_bytes)
+    
+    # 1. 修复由于官网未转义 & 导致的符号中断错误
+    text = re.sub(r"&(?![a-zA-Z0-9#]+;)", "&amp;", text)
+    
+    # 2. 清洗可能引发畸形 XML 语法的非法控制字符
+    text = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", text)
+    
+    return text.encode('utf-8')
+
 for idx, proxy in enumerate(PROXY_URLS, 1):
     try:
-        print(f"[{idx}/{len(PROXY_URLS)}] 正在通过安全通道安全穿透获取国会最新报告...")
+        print(f"[{idx}/{len(PROXY_URLS)}] 正在通过清洗通道穿透获取国会最新报告...")
         response = requests.get(proxy, headers=headers, timeout=25)
         print(f"   ↳ 通道回应状态码: {response.status_code}")
         
-        if response.status_code == 200:
-            # 解析国会官方返回的纯 XML 文本
-            root = ET.fromstring(response.content)
+        if response.status_code == 200 and response.content:
+            # 执行深度安全清洗
+            cleaned_content = clean_xml_string(response.content)
+            
+            # 使用更健壮的模式解析纯文本
+            root = ET.fromstring(cleaned_content)
             items = root.findall(".//item")
             
             if items:
-                print(f"   🎉 [穿透成功] 已成功抓取并解析到官方 {len(items)} 条实时报告！")
+                print(f"   🎉 [数据清洗成功] 已成功抓取并解析到官方 {len(items)} 条实时报告！")
                 
-                # 规范化提取前 20 条
                 for item in items[:20]:
                     title = item.find("title")
                     link = item.find("link")
@@ -46,7 +64,7 @@ for idx, proxy in enumerate(PROXY_URLS, 1):
                     })
                 break
             else:
-                print("   ⚠️ 穿透成功但数据为空，切换备用通道...")
+                print("   ⚠️ 当前通道返回数据包正常，但未检测到有效节点，尝试备用通道...")
         else:
             print(f"   ⚠️ 当前通道暂时受限 (状态码: {response.status_code})")
             
@@ -54,7 +72,7 @@ for idx, proxy in enumerate(PROXY_URLS, 1):
         print(f"   ❌ 当前通道异常: {e}")
         continue
 
-# 2. 如果发生极端全部失败，生成警告文件保障订阅不崩溃
+# 2. 兜底逻辑：无缝保证订阅永不掉线
 if not reports:
     print("\n🚨 警告：所有专用数据通道目前均未返回正确响应。")
     reports = [

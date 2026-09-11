@@ -2,43 +2,50 @@
 <rss version="2.0">
  <channel>
   <title>美国国会研究处 (CRS) 最新报告</title>
-  <link>https://congress.gov</link>
+  <link>https://crsreports.congress.gov/</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 14:10:48 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 14:49:16 GMT</lastBuildDate>
   <item>
    <title>IF12938 - U.S. Satellite Capabilities for Tracking the Wildfire Life Cycle</title>
-   <link>https://congress.govproduct/pdf/IF/IF12938</link>
+   <link>https://congress.govIF/IF12938</link>
    <guid isPermaLink="false">IF12938</guid>
-   <pubDate>Fri, 11 Sep 2026 14:10:48 GMT</pubDate>
-   <description>报告编号: IF12938 | 实时政研追踪报告。</description>
+   <pubDate>Fri, 11 Sep 2026 14:49:16 GMT</pubDate>
+   <description>报告编号: IF12938 | 状态: 官方最新发布数据</description>
   </item>
   <item>
-   <title>R48580 - Avian Influenza (Bird Flu) in the United States: Government Response Options</title>
-   <link>https://congress.govproduct/pdf/R/R48580</link>
-   <guid isPermaLink="false">R48580</guid>
-   <pubDate>Fri, 11 Sep 2026 12:06:48 GMT</pubDate>
-   <description>报告编号: R48580 | 实时政研追踪报告。</description>
+   <title>IF12415 - CFIUS: Executive Branch Actions on Evolving National Security Risks and Enforcement</title>
+   <link>https://congress.govIF/IF12415</link>
+   <guid isPermaLink="false">IF12415</guid>
+   <pubDate>Fri, 11 Sep 2026 12:44:16 GMT</pubDate>
+   <description>报告编号: IF12415 | 状态: 官方最新发布数据</description>
   </item>
   <item>
-   <title>R48918 - The 2026 Farm Bill: Comparison of the House and Senate Bills with Current Law</title>
-   <link>https://congress.govproduct/pdf/R/R48918</link>
-   <guid isPermaLink="false">R48918</guid>
-   <pubDate>Fri, 11 Sep 2026 10:02:48 GMT</pubDate>
-   <description>报告编号: R48918 | 实时政研追踪报告。</description>
+   <title>LSB11480 - SEC Proposes "Regulation Crypto Assets"</title>
+   <link>https://congress.govLSB/LSB11480</link>
+   <guid isPermaLink="false">LSB11480</guid>
+   <pubDate>Fri, 11 Sep 2026 10:39:16 GMT</pubDate>
+   <description>报告编号: LSB11480 | 状态: 官方最新发布数据</description>
   </item>
   <item>
-   <title>R47162 - Overview of U.S. Army Corps of Engineers Environmental Infrastructure Assistance</title>
-   <link>https://congress.govproduct/pdf/R/R47162</link>
-   <guid isPermaLink="false">R47162</guid>
-   <pubDate>Fri, 11 Sep 2026 07:58:48 GMT</pubDate>
-   <description>报告编号: R47162 | 实时政研追踪报告。</description>
+   <title>IF13311 - Overview of the 340B Drug Discount Program</title>
+   <link>https://congress.govIF/IF13311</link>
+   <guid isPermaLink="false">IF13311</guid>
+   <pubDate>Fri, 11 Sep 2026 08:34:16 GMT</pubDate>
+   <description>报告编号: IF13311 | 状态: 官方最新发布数据</description>
   </item>
   <item>
-   <title>IF12910 - Searching for Federal Grants: An Overview of Resources for Constituent Seeker</title>
-   <link>https://congress.govproduct/pdf/IF/IF12910</link>
-   <guid isPermaLink="false">IF12910</guid>
-   <pubDate>Fri, 11 Sep 2026 05:54:48 GMT</pubDate>
-   <description>报告编号: IF12910 | 实时政研追踪报告。</description>
+   <title>LSB11479 - The Sixth Amendment's Right to Assistance of Counsel and the Risk of Denaturalization: Federal Circuit Courts Are Split</title>
+   <link>https://congress.govLSB/LSB11479</link>
+   <guid isPermaLink="false">LSB11479</guid>
+   <pubDate>Fri, 11 Sep 2026 06:29:16 GMT</pubDate>
+   <description>报告编号: LSB11479 | 状态: 官方最新发布数据</description>
+  </item>
+  <item>
+   <title>IF12988 - Housing Supply</title>
+   <link>https://congress.govIF/IF12988</link>
+   <guid isPermaLink="false">IF12988</guid>
+   <pubDate>Fri, 11 Sep 2026 04:24:16 GMT</pubDate>
+   <description>报告编号: IF12988 | 状态: 官方最新发布数据</description>
   </item>
  </channel>
 </rss>

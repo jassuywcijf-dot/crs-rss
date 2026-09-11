@@ -5,8 +5,12 @@ on:
     branches:
       - main
   schedule:
-    # 🌟 开启全自动定时器：每天自动在后台帮你在固定时间运行抓取，再也不用手动点了
     - cron: '0 0 * * *'
+
+# 🌟 核心修复：显式告诉 GitHub 必须赋予这个机器人推送到公网的写权限
+permissions:
+  contents: write
+  pages: write
 
 jobs:
   build:
@@ -27,11 +31,9 @@ jobs:
       - name: 运行主抓取脚本
         run: python main.py
 
-      # 🌟 核心突破：强制将新生成的干净 feed.xml 提交并推送到你的 GitHub Pages 线上！
       - name: 强制同步推送到 GitHub Pages 公网
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add feed.xml
-          # 如果文件有变化就提交，防止没有更新时报错卡死
           git diff --quiet && git diff --staged --quiet || (git commit -m "自动更新：同步最新美国国会 CRS 报告 [$(date)]" && git push)

@@ -1,4 +1,5 @@
 import requests
+import html
 from datetime import datetime
 import xml.etree.ElementTree as ET
 
@@ -16,46 +17,45 @@ reports = []
 
 for idx, proxy in enumerate(PROXY_URLS, 1):
     try:
-        print(f"[{idx}/{len(PROXY_URLS)}] 正在通过字符串穿透通道提取国会最新报告...")
+        print(f"[{idx}/{len(PROXY_URLS)}] 正在通过自适应还原通道提取国会最新报告...")
         response = requests.get(proxy, headers=headers, timeout=25)
         print(f"   ↳ 通道回应状态码: {response.status_code}")
         
         if response.status_code == 200 and response.text:
-            raw_text = response.text
+            # 🌟 核心突破：将代理转义过的 &lt;item&gt; 完美还原回标准的 <item>
+            raw_text = html.unescape(response.text)
             
-            # 🌟 降维打击：直接用字符串切分 <item> 标签，100% 免疫任何 XML/JSON 语法错误！
+            # 使用不区分大小写的安全分割（防止官网抽风使用大写 <ITEM>）
+            # 先统一临时转为小写来寻找切分点，或者直接用小写替换
+            import re
+            raw_text = re.sub(r'</?item>', lambda m: m.group(0).lower(), raw_text, flags=re.IGNORECASE)
+            
             parts = raw_text.split("<item>")
             
-            # 第一个切片是 channel 信息，后面的每一个切片都代表一个 item
             if len(parts) > 1:
                 item_blocks = parts[1:]
-                print(f"   🎉 [切分成功] 成功剥离出官方 {len(item_blocks)} 条实时报告文本块！")
+                print(f"   🎉 [还原并切分成功] 成功剥离出官方 {len(item_blocks)} 条实时报告文本块！")
                 
-                # 提取前 20 条
                 for block in item_blocks[:20]:
-                    # 移除闭合标签，防止干扰
-                    block = block.split("</item>")[0]
+                    # 剥离尾部闭合标签
+                    block_content = block.split("</item>")[0]
                     
-                    # 辅助提取函数：利用简易切分安全提取标签内部的值
+                    # 自适应大小写标签提取函数
                     def extract_tag_value(tag_name, src_text):
-                        start_tag = f"<{tag_name}>"
-                        end_tag = f"</{tag_name}>"
-                        if start_tag in src_text and end_tag in src_text:
-                            try:
-                                val = src_text.split(start_tag)[1].split(end_tag)[0].strip()
-                                # 清除可能自带的 CDATA 包装
-                                if "<![CDATA[" in val:
-                                    val = val.split("<![CDATA[")[1].split("]]>")[0].strip()
-                                return val
-                            except Exception:
-                                return ""
+                        pattern = r'<{tag}>([\s\S]*?)</{tag}>'.format(tag=tag_name)
+                        match = re.search(pattern, src_text, re.IGNORECASE)
+                        if match:
+                            val = match.group(1).strip()
+                            # 移除可能遗留的 CDATA 包装
+                            val = re.sub(r'<!\[CDATA\[(.*?)\]\]>', r'\1', val, flags=re.IGNORECASE)
+                            return val
                         return ""
                     
-                    title = extract_tag_value("title", block) or "无标题"
-                    link = extract_tag_value("link", block) or "https://congress.gov"
-                    guid = extract_tag_value("guid", block) or "UNKNOWN"
-                    pub_date = extract_tag_value("pubDate", block)
-                    desc = extract_tag_value("description", block)
+                    title = extract_tag_value("title", block_content) or "无标题"
+                    link = extract_tag_value("link", block_content) or "https://congress.gov"
+                    guid = extract_tag_value("guid", block_content) or "UNKNOWN"
+                    pub_date = extract_tag_value("pubDate", block_content)
+                    desc = extract_tag_value("description", block_content)
                     
                     reports.append({
                         "title": title,
@@ -66,7 +66,7 @@ for idx, proxy in enumerate(PROXY_URLS, 1):
                     })
                 break
             else:
-                print("   ⚠️ 文本已拿到，但未发现 <item> 标记，尝试备用通道...")
+                print("   ⚠️ 文本已还原，但仍未发现 <item> 标记，尝试备用通道...")
         else:
             print(f"   ⚠️ 当前通道暂时受限 (状态码: {response.status_code})")
             
@@ -74,20 +74,20 @@ for idx, proxy in enumerate(PROXY_URLS, 1):
         print(f"   ❌ 当前通道异常: {e}")
         continue
 
-# 2. 如果发生极端全部失败，生成警告文件保障订阅不崩溃
+# 2. 兜底逻辑
 if not reports:
     print("\n🚨 警告：所有专用数据通道目前均未匹配到有效报告数据。")
     reports = [
         {
-            "title": f"【系统提示】官方数据通道结构微调中，当前时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "title": f"【系统提示】官方数据通道正在自适应调整，当前时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             "url": "https://congress.gov",
             "number": "ALL_CHANNELS_LIMIT",
             "publishedAt": datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT"),
-            "description": "由于国会官网服务器变动，数据同步稍有延迟。脚本将在下次定时自动重试。"
+            "description": "同步稍有延迟，脚本将在下次定时自动重试。"
         }
     ]
 
-# 3. 重新构建生成您自有的本地规范化 rss.xml（写入本地时我们确保数据是干净无错的）
+# 3. 重新构建生成您自有的本地规范化 rss.xml
 rss = ET.Element("rss", version="2.0")
 channel = ET.SubElement(rss, "channel")
 ET.SubElement(channel, "title").text = "美国国会研究处 (CRS) 最新报告"

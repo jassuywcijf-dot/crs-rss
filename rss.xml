@@ -4,13 +4,13 @@
   <title>美国国会研究处 (CRS) 最新报告</title>
   <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 12:56:06 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 12:57:25 GMT</lastBuildDate>
   <item>
-   <title>【系统提示】官方数据通道结构微调中，当前时间：2026-09-11 12:56:06</title>
+   <title>【系统提示】官方数据通道正在自适应调整，当前时间：2026-09-11 12:57:25</title>
    <link>https://congress.gov</link>
    <guid isPermaLink="false">ALL_CHANNELS_LIMIT</guid>
-   <pubDate>Fri, 11 Sep 2026 12:56:06 GMT</pubDate>
-   <description>由于国会官网服务器变动，数据同步稍有延迟。脚本将在下次定时自动重试。</description>
+   <pubDate>Fri, 11 Sep 2026 12:57:25 GMT</pubDate>
+   <description>同步稍有延迟，脚本将在下次定时自动重试。</description>
   </item>
  </channel>
 </rss>

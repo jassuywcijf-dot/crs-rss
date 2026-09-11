@@ -3,8 +3,8 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 # 🌟 终极修改：在这里填入你刚刚在 Cloudflare 免费自建的代理 Worker 网址
-# 例如: "https://workers.dev"
-YOUR_WORKER_URL = "填入你自建的_workers_dev_网址"
+# 🌟 已经为你加上了双引号，并删除了会导致报错的提醒代码
+YOUR_WORKER_URL = "https://empty-wind-3bbb.jassuywcijf.workers.dev/"
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
@@ -13,9 +13,7 @@ headers = {
 reports = []
 
 try:
-    print(f"🚀 正在通过自建 Cloudflare 白名单中转站获取数据...")
-    if https://empty-wind-3bbb.jassuywcijf.workers.dev/.startswith("填入"):
-        raise ValueError("请先将代码中的 YOUR_WORKER_URL 替换为您在 Cloudflare 自建的真实网址！")
+    print(f"🚀 正在通过自适应还原通道提取国会最新报告...")
 
     response = requests.get(YOUR_WORKER_URL, headers=headers, timeout=30)
     print(f"   ↳ 中转站回应状态码: {response.status_code}")

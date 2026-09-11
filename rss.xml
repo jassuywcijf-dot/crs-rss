@@ -4,6 +4,13 @@
     <title>美国国会研究处 (CRS) 最新报告</title>
     <link>https://congress.gov</link>
     <description>自动同步美国国会最新研究报告</description>
-    <lastBuildDate>Fri, 11 Sep 2026 08:25:28 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 11 Sep 2026 08:44:57 GMT</lastBuildDate>
+    <item>
+      <title>【系统通知】自动抓取成功，但目前国会接口暂无最新报告</title>
+      <link>https://congress.gov</link>
+      <guid isPermaLink="false">SYSTEM_INIT</guid>
+      <pubDate>Fri, 11 Sep 2026 08:44:57 GMT</pubDate>
+      <description>报告编号: SYSTEM_INIT | 状态: Active | 版本: 1</description>
+    </item>
   </channel>
 </rss>

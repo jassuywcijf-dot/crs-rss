@@ -4,13 +4,13 @@
   <title>美国国会研究处 (CRS) 最新报告</title>
   <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 13:24:54 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 13:26:08 GMT</lastBuildDate>
   <item>
-   <title>【系统通知】正在建立新的数据众包链路，当前同步时间：2026-09-11 13:24:54</title>
+   <title>【系统通知】正在同步更新链路，当前时间：2026-09-11 13:26:08</title>
    <link>https://congress.gov</link>
    <guid isPermaLink="false">MIRROR_TUNING</guid>
-   <pubDate>Fri, 11 Sep 2026 13:24:54 GMT</pubDate>
-   <description>由于上游信誉节点调整，本地脚本正在尝试重连其他节点。您的订阅仍处于安全激活状态。</description>
+   <pubDate>Fri, 11 Sep 2026 13:26:08 GMT</pubDate>
+   <description>本地脚本正在尝试重连节点，您的订阅仍处于安全激活状态。</description>
   </item>
  </channel>
 </rss>

@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <rss version="2.0">
   <channel>
-    <title>美国国会研究处 (CRS) 最新报告</title>
+    <title>美国国会最新立法与提案动态</title>
     <link>https://congress.gov</link>
-    <description>自动同步美国国会最新研究报告</description>
-    <lastBuildDate>Fri, 11 Sep 2026 08:44:57 GMT</lastBuildDate>
+    <description>实时同步美国国会最新提交的法案与议案</description>
+    <lastBuildDate>Fri, 11 Sep 2026 08:48:18 GMT</lastBuildDate>
     <item>
-      <title>【系统通知】自动抓取成功，但目前国会接口暂无最新报告</title>
+      <title>[Notice-SYSTEM_INIT] 【系统通知】自动抓取成功，但目前国会接口暂无数据</title>
       <link>https://congress.gov</link>
-      <guid isPermaLink="false">SYSTEM_INIT</guid>
-      <pubDate>Fri, 11 Sep 2026 08:44:57 GMT</pubDate>
-      <description>报告编号: SYSTEM_INIT | 状态: Active | 版本: 1</description>
+      <guid isPermaLink="false">Notice_SYSTEM_INIT</guid>
+      <pubDate>Fri, 11 Sep 2026 08:48:18 GMT</pubDate>
+      <description>最新进展: 暂无描述</description>
     </item>
   </channel>
 </rss>

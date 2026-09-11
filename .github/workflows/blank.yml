@@ -1,36 +1,37 @@
-name: Update CRS RSS Feed
+name: 每日自动抓取国会 CRS 报告
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '0 * * * *' # 已修改：每 1 小时的整点自动运行一次
-  workflow_dispatch: # 允许手动点击按钮触发运行
+    # 🌟 开启全自动定时器：每天自动在后台帮你在固定时间运行抓取，再也不用手动点了
+    - cron: '0 0 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # 赋予代码推送权限
-
     steps:
-    - name: 检出代码
-      uses: actions/checkout@v4
+      - name: 检查仓库代码
+        uses: actions/checkout@v3
 
-    - name: 设置 Python 环境
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: 安装依赖
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: 安装网络和解析依赖
+        run: |
+          pip install requests
 
-    - name: 运行抓取脚本
-      run: python main.py
+      - name: 运行主抓取脚本
+        run: python main.py
 
-    - name: 提交并发布新生成的 RSS 文件
-      run: |
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Actions"
-        git add rss.xml
-        git diff --cached --quiet || (git commit -m "Update RSS Feed" && git push)
+      # 🌟 核心突破：强制将新生成的干净 feed.xml 提交并推送到你的 GitHub Pages 线上！
+      - name: 强制同步推送到 GitHub Pages 公网
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add feed.xml
+          # 如果文件有变化就提交，防止没有更新时报错卡死
+          git diff --quiet && git diff --staged --quiet || (git commit -m "自动更新：同步最新美国国会 CRS 报告 [$(date)]" && git push)

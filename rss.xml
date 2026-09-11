@@ -4,13 +4,13 @@
   <title>美国国会研究处 (CRS) 最新报告</title>
   <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 12:40:52 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 12:42:58 GMT</lastBuildDate>
   <item>
-   <title>【系统同步异常】所有公共镜像通道暂不可用，同步时间：2026-09-11 12:40:52</title>
+   <title>【系统同步异常】所有公共镜像通道暂不可用，同步时间：2026-09-11 12:42:58</title>
    <link>https://congress.gov</link>
    <guid isPermaLink="false">ALL_MIRRORS_FAILED</guid>
-   <pubDate>Fri, 11 Sep 2026 12:40:52 GMT</pubDate>
-   <description>多源轮询均未成功获取到数据，可能是上游源发生变动。脚本将在下次定时自动重试。</description>
+   <pubDate>Fri, 11 Sep 2026 12:42:58 GMT</pubDate>
+   <description>多源轮询均未成功获取到数据。脚本将在下次定时自动重试。</description>
   </item>
  </channel>
 </rss>

@@ -2,15 +2,15 @@
 <rss version="2.0">
  <channel>
   <title>美国国会研究处 (CRS) 最新报告</title>
-  <link>https://crsreports.congress.gov/</link>
+  <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 12:39:00 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 12:40:52 GMT</lastBuildDate>
   <item>
-   <title>【系统提示】中转服务暂时离线，正在等待重试。当前时间：2026-09-11 12:39:00</title>
-   <link>https://crsreports.congress.gov/</link>
-   <guid isPermaLink="false">PROXY_TEMPORARILY_OFFLINE</guid>
-   <pubDate>Fri, 11 Sep 2026 12:39:00 GMT</pubDate>
-   <description>公共中转节点请求受限或超时，脚本将在下次定时任务中自动重试。</description>
+   <title>【系统同步异常】所有公共镜像通道暂不可用，同步时间：2026-09-11 12:40:52</title>
+   <link>https://congress.gov</link>
+   <guid isPermaLink="false">ALL_MIRRORS_FAILED</guid>
+   <pubDate>Fri, 11 Sep 2026 12:40:52 GMT</pubDate>
+   <description>多源轮询均未成功获取到数据，可能是上游源发生变动。脚本将在下次定时自动重试。</description>
   </item>
  </channel>
 </rss>

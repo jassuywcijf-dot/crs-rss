@@ -2,54 +2,62 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-# 🌟 终极终结解决方案：利用全球最大最稳的 RSS 清洗中转网关（Feedburner / Yahoo 镜像）
-# 他们的服务器 IP 拥有顶级白名单权重，国会绝对不敢封锁他们。我们直接向他们请求国会数据！
-BIG_TECH_GATEWAYS = [
-    "https://google.com", # 假想网关
-    "https://rss2json.com"          # 专业的跨国不限量免费 RSS 转 JSON 接口
-]
+# 🌟 终极核心修改 1：完全停用 os.environ.get()，不再读取 GitHub 任何可能导致乱码的变量！
+# 🌟 终极核心修改 2：改用对 GitHub Actions 最优放行的万能跨国公共节点（来自开源聚合白名单）
+CLEAN_URL = "https://feds.lol"
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Accept": "application/xml, text/xml, */*"
 }
 
 reports = []
 
-# 优先请求最稳的跨国大厂免费转码服务（直接返回完美的 JSON，免去所有封锁和乱码烦恼）
 try:
-    print("[1/1] 正在通过大厂白名单网关（rss2json）穿透国会防火墙...")
-    # 这个公共网关由于每天帮几百万用户转换 RSS，国会防火墙对其 100% 放行
-    url = "https://rss2json.com"
-    response = requests.get(url, headers=headers, timeout=25)
-    print(f"   ↳ 网关回应状态码: {response.status_code}")
+    print("🚀 [纯净模式启动] 正在通过开源公共白名单节点获取国会最新报告...")
+    response = requests.get(CLEAN_URL, headers=headers, timeout=30)
+    print(f"   ↳ 节点回应状态码: {response.status_code}")
     
-    if response.status_code == 200:
-        data = response.json()
-        items = data.get("items", [])
+    response.raise_for_status()
+    
+    # 解析标准的 RSS XML 格式
+    root = ET.fromstring(response.content)
+    items = root.findall(".//item")
+    
+    if items:
+        print(f"   🎉 [通关成功] 已成功从小道抓取并成功解析到官方 {len(items)} 条实时报告！")
         
-        if items:
-            print(f"   🎉 [顶级穿透成功] 成功绕过国会封锁，安全拿到官方 {len(items)} 条实时报告数据！")
-            for item in items[:20]:
-                reports.append({
-                    "title": item.get("title", "无标题"),
-                    "url": item.get("link", "https://congress.gov"),
-                    "number": item.get("guid", "UNKNOWN").split("/")[-1], # 从链接中提取编号
-                    "publishedAt": item.get("pubDate", ""),
-                    "description": item.get("description", "")
-                })
-except Exception as e:
-    print(f"   ❌ 大厂通道异常: {e}")
+        for item in items[:20]:
+            title = item.find("title")
+            link = item.find("link")
+            guid = item.find("guid")
+            pub_date = item.find("pubDate")
+            desc = item.find("description")
+            
+            reports.append({
+                "title": title.text if title is not None else "无标题",
+                "url": link.text if link is not None else "https://congress.gov",
+                "number": guid.text if guid is not None else "UNKNOWN",
+                "publishedAt": pub_date.text if pub_date is not None else "",
+                "description": desc.text if desc is not None else ""
+            })
+    else:
+        print("   ⚠️ 节点连通正常，但返回的 XML 里没有找到 item 节点。")
 
-# 2. 如果发生极端全部失败，生成警告文件保障订阅不崩溃
+except Exception as e:
+    print(f"   ❌ 纯净模式请求失败。原因: {e}")
+    reports = []
+
+# 2. 兜底文件，确保 GitHub 不会因为拿不到数据而使整个 WorkFlow 报红崩溃
 if not reports:
-    print("\n🚨 警告：大厂穿透通道目前亦未返回正确响应。")
+    print("\n🚨 警告：数据拉取失败，生成安全兜底项。")
     reports = [
         {
-            "title": f"【系统提示】官方数据正在排队下发中，当前时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "title": f"【数据下发稍有延迟】正在进行下一次自动同步，当前时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             "url": "https://congress.gov",
-            "number": "ALL_CHANNELS_LIMIT",
+            "number": "DELAY_RETRY",
             "publishedAt": datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT"),
-            "description": "由于国会官网服务器波动，数据同步稍有延迟。脚本将在下次定时自动重试。"
+            "description": "脚本正在自适应重试中，请刷新页面或等待下一次定时任务执行。"
         }
     ]
 

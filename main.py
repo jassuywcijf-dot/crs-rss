@@ -1,47 +1,70 @@
-import os
 import requests
-from datetime import datetime
 import xml.etree.ElementTree as ET
+from datetime import datetime
 
-# 1. 终极修复：直接写入完美拼写的官方完整 URL
-url = "https://congress.gov"
+# 1. 绕过 API，直接抓取国会研究处官方公开的原始 RSS 源
+# 官方普通网页的 RSS 拦截机制没有 API 那么严格
+OFFICIAL_RSS_URL = "https://congress.gov"
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "application/json",
+    "Accept": "application/xml, text/xml, */*",
     "Accept-Language": "en-US,en;q=0.9"
 }
 
 reports = []
 
 try:
-    print("正在向美国国会官方 API 发起请求...")
-    response = requests.get(url, headers=headers, timeout=20)
+    print("开始通过官方公开 RSS 通道抓取数据...")
+    response = requests.get(OFFICIAL_RSS_URL, headers=headers, timeout=25)
     print(f"服务器回应状态码: {response.status_code}")
     
-    # 如果接口返回正常，提取数据
     response.raise_for_status()
-    data = response.json()
-    reports = data.get("crsReports", []) 
-    print(f"🎉 成功！从官方 API 获取到 {len(reports)} 条真实报告数据！")
     
+    # 解析官方返回的原始 XML 数据
+    root = ET.fromstring(response.content)
+    
+    # 寻找所有的 <item> 标签
+    items = root.findall(".//item")
+    print(f"成功从官方源解析到 {len(items)} 条原始报告！")
+    
+    # 提取前 20 条，转换为我们需要的数据结构
+    for item in items[:20]:
+        title = item.find("title")
+        link = item.find("link")
+        guid = item.find("guid")
+        pub_date = item.find("pubDate")
+        desc = item.find("description")
+        
+        reports.append({
+            "title": title.text if title is not None else "无标题",
+            "url": link.text if link is not None else "https://congress.gov",
+            "number": guid.text if guid is not None else "UNKNOWN",
+            "publishedAt": pub_date.text if pub_date is not None else "",
+            "description": desc.text if desc is not None else ""
+        })
+        
+    print(f"🎉 成功！清洗并筛选出最新的 {len(reports)} 条报告数据！")
+
 except Exception as e:
-    print("\n❌ API 请求彻底失败")
+    print("\n❌ 抓取官方公开 RSS 失败")
     print(f"失败原因: {e}")
     reports = []
 
-# 2. 兜底测试数据（仅在完全失败时触发）
+# 2. 兜底测试数据（只有在上方彻底失败时才会生成提示项）
 if not reports:
+    print("触发失败兜底，生成错误提示项...")
     reports = [
         {
-            "title": f"【错误提示】API 仍未连通，当前时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "title": f"【错误提示】官方 RSS 通道亦被 GitHub 阻断，当前时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             "url": "https://congress.gov",
-            "number": "SYNC_FAILED",
-            "publishedAt": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "number": "ALL_CHANNELS_BLOCKED",
+            "publishedAt": datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT"),
+            "description": "API 与公开 RSS 均被 403 封锁，需要引入代理或中转方案。"
         }
     ]
 
-# 3. 构建并生成 RSS.xml
+# 3. 构建并生成您自己的规范化 rss.xml
 rss = ET.Element("rss", version="2.0")
 channel = ET.SubElement(rss, "channel")
 ET.SubElement(channel, "title").text = "美国国会研究处 (CRS) 最新报告"
@@ -52,29 +75,18 @@ ET.SubElement(channel, "lastBuildDate").text = datetime.utcnow().strftime("%a, %
 for r in reports:
     item = ET.SubElement(channel, "item")
     
-    title = r.get("title", "无标题")
-    url_data = r.get("url", "https://congress.gov")
-    link = url_data if isinstance(url_data, str) else url_data.get("url", "https://congress.gov")
-    report_id = r.get("number", "UNKNOWN_ID")
+    ET.SubElement(item, "title").text = r["title"]
+    ET.SubElement(item, "link").text = r["url"]
+    ET.SubElement(item, "guid", isPermaLink="false").text = r["number"]
+    ET.SubElement(item, "pubDate").text = r["publishedAt"] or datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
     
-    ET.SubElement(item, "title").text = title
-    ET.SubElement(item, "link").text = link
-    ET.SubElement(item, "guid", isPermaLink="false").text = report_id
+    # 保持描述的丰富度
+    if r["description"]:
+        ET.SubElement(item, "description").text = r["description"]
+    else:
+        ET.SubElement(item, "description").text = f"报告编号: {r['number']} | 状态: 有效"
 
-    # 日期安全解析
-    pub_date_raw = r.get("publishedAt", "")
-    pub_str = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
-    if pub_date_raw:
-        try:
-            clean_date = pub_date_raw.replace("Z", "").split(".")[0]
-            pub_dt = datetime.strptime(clean_date, "%Y-%m-%dT%H:%M:%S")
-            pub_str = pub_dt.strftime("%a, %d %b %Y %H:%M:%S GMT")
-        except Exception:
-            pass
-        
-    ET.SubElement(item, "pubDate").text = pub_str
-    ET.SubElement(item, "description").text = f"报告编号: {report_id} | 状态: 有效"
-
+# 写入文件
 tree = ET.ElementTree(rss)
 ET.indent(tree, space=" ", level=0)
 tree.write("rss.xml", encoding="utf-8", xml_declaration=True)

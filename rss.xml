@@ -4,13 +4,13 @@
   <title>美国国会研究处 (CRS) 最新报告</title>
   <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 13:19:52 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 13:23:36 GMT</lastBuildDate>
   <item>
-   <title>【系统提示】自建中转网关正在校准中，当前时间：2026-09-11 13:19:52</title>
+   <title>【系统通知】正在自适应穿透国会防火墙，当前同步时间：2026-09-11 13:23:36</title>
    <link>https://congress.gov</link>
-   <guid isPermaLink="false">WORKER_TUNING</guid>
-   <pubDate>Fri, 11 Sep 2026 13:19:52 GMT</pubDate>
-   <description>请确保您的 Cloudflare Worker 已成功发布并能被公网访问。脚本将在下次定时自动重试。</description>
+   <guid isPermaLink="false">AUTO_TUNING</guid>
+   <pubDate>Fri, 11 Sep 2026 13:23:36 GMT</pubDate>
+   <description>由于美国国会官网近期加强了安全审查，同步脚本正在使用动态信誉节点链重试，请稍后刷新。</description>
   </item>
  </channel>
 </rss>

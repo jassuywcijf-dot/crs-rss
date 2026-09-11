@@ -4,7 +4,7 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 
 # 1. 正确官方接口（v3 + crsreports + 真实 Key）
-API_KEY = os.environ.get("CONGRESS_API_KEY", "DEMO_KEY")  # 确保你密钥名和值完全正确
+API_KEY = os.environ.get("CONGRESS_API_KEY", "UpddHt4B3fnegURsayYA48djp2FErGYp2Q7Aw3hL")  # 确保你密钥名和值完全正确
 url = f"https://api.congress.gov/v3/crsreports?api_key={API_KEY}&limit=20&format=json"
 
 try:

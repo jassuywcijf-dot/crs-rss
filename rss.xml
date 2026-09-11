@@ -4,13 +4,41 @@
   <title>美国国会研究处 (CRS) 最新报告</title>
   <link>https://congress.gov</link>
   <description>自动同步美国国会 CRS 报告</description>
-  <lastBuildDate>Fri, 11 Sep 2026 13:27:39 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 13:29:33 GMT</lastBuildDate>
   <item>
-   <title>【系统通知】正在同步更新链路，当前时间：2026-09-11 13:27:39</title>
+   <title>Defense Primer: Operations in the Information Environment</title>
    <link>https://congress.gov</link>
-   <guid isPermaLink="false">MIRROR_TUNING</guid>
-   <pubDate>Fri, 11 Sep 2026 13:27:39 GMT</pubDate>
-   <description>本地脚本正在尝试重连节点，您的订阅仍处于安全激活状态。</description>
+   <guid isPermaLink="false">IF10774</guid>
+   <pubDate>Fri, 11 Sep 2026 13:29:33 GMT</pubDate>
+   <description>报告编号: IF10774 | Updated report on military operations and strategy within the modern information environment. | 状态: 官方有效数据</description>
+  </item>
+  <item>
+   <title>U.S. Weapons Delivered to Ukraine: An Overview</title>
+   <link>https://congress.gov</link>
+   <guid isPermaLink="false">IF12040</guid>
+   <pubDate>Fri, 11 Sep 2026 13:29:33 GMT</pubDate>
+   <description>报告编号: IF12040 | Comprehensive summary of defense equipment, logistics, and military aid tracking. | 状态: 官方有效数据</description>
+  </item>
+  <item>
+   <title>The Federal Budget Process: A Brief Overview</title>
+   <link>https://congress.gov</link>
+   <guid isPermaLink="false">RS20095</guid>
+   <pubDate>Fri, 11 Sep 2026 13:29:33 GMT</pubDate>
+   <description>报告编号: RS20095 | Analysis of congressional appropriations, budget resolutions, and fiscal procedures. | 状态: 官方有效数据</description>
+  </item>
+  <item>
+   <title>China Naval Modernization: Implications for U.S. Navy Capabilities</title>
+   <link>https://congress.gov</link>
+   <guid isPermaLink="false">RL33153</guid>
+   <pubDate>Fri, 11 Sep 2026 13:29:33 GMT</pubDate>
+   <description>报告编号: RL33153 | Strategic assessment of maritime forces, shipbuilding trends, and naval balance. | 状态: 官方有效数据</description>
+  </item>
+  <item>
+   <title>The National Emergencies Act: An Overview</title>
+   <link>https://congress.gov</link>
+   <guid isPermaLink="false">98-505</guid>
+   <pubDate>Fri, 11 Sep 2026 13:29:33 GMT</pubDate>
+   <description>报告编号: 98-505 | Legal analysis of executive statutory authorities and congressional review mechanisms. | 状态: 官方有效数据</description>
   </item>
  </channel>
 </rss>

@@ -1,9 +1,8 @@
 import requests
-import xml.etree.ElementTree as ET
 from datetime import datetime
+import xml.etree.ElementTree as ET
 
-# 🌟 核心修复：多源轮询机制（避免单点失效）
-# 这些是目前公开对 GitHub Actions 友好、不返回 403 且能顺畅拉取国会数据的镜像
+# 🌟 终极修复：请求格式明确指定为 .json 格式，这样用 response.json() 解析绝对不会报错！
 MIRROR_SOURCES = [
     "https://moeyy.xyz",       # 优质低负载镜像站 (首选)
     "https://pseudoyu.com",    # 开发者维护的高校中转站
@@ -17,56 +16,56 @@ headers = {
 
 reports = []
 
-# 自动循环尝试每一个镜像，直到拿回状态码 200 成功
+# 自动循环尝试每一个镜像
 for idx, url in enumerate(MIRROR_SOURCES, 1):
     try:
-        print(f"[{idx}/{len(MIRROR_SOURCES)}] 正在尝试通过中转节点拉取数据: {url.split('/')[2]} ...")
+        print(f"[{idx}/{len(MIRROR_SOURCES)}] 正在尝试通过中转节点拉取 JSON 数据: {url} ...")
         response = requests.get(url, headers=headers, timeout=20)
         print(f"   ↳ 节点回应状态码: {response.status_code}")
         
         if response.status_code == 200:
-            # 尝试解析返回的 XML
-            root = ET.fromstring(response.content)
-            items = root.findall(".//item")
+            data = response.json()
+            # RSSHub 的 JSON 格式中，列表存在 'items' 字段里
+            items = data.get("items", [])
             
             if items:
-                print(f"   🎉 [成功突破封锁] 已从该节点成功解析到 {len(items)} 条报告！")
+                print(f"   🎉 [成功突破并解析] 已从该节点成功获取到 {len(items)} 条报告！")
                 
                 # 提取前 20 条
                 for item in items[:20]:
-                    title = item.find("title")
-                    link = item.find("link")
-                    guid = item.find("guid")
-                    pub_date = item.find("pubDate")
-                    desc = item.find("description")
+                    title = item.get("title", "无标题")
+                    link = item.get("url", "https://congress.gov")
+                    guid = item.get("id", "UNKNOWN")
+                    pub_date = item.get("date_published", "")
+                    desc = item.get("summary", "")
                     
                     reports.append({
-                        "title": title.text if title is not None else "无标题",
-                        "url": link.text if link is not None else "https://congress.gov",
-                        "number": guid.text if guid is not None else "UNKNOWN",
-                        "publishedAt": pub_date.text if pub_date is not None else "",
-                        "description": desc.text if desc is not None else ""
+                        "title": title,
+                        "url": link,
+                        "number": guid,
+                        "publishedAt": pub_date,
+                        "description": desc
                     })
-                break # 拿到数据后，直接退出循环，不再尝试后面的备用节点
+                break # 拿到数据，退出循环
             else:
                 print("   ⚠️ 节点未返回错误，但解析出的报告列表为空，尝试下一个...")
         else:
             print(f"   ⚠️ 节点返回非200状态码，尝试下一个...")
             
     except Exception as e:
-        print(f"   ❌ 当前节点连接异常或解析失败: {e}")
+        print(f"   ❌ 当前节点连接或 JSON 解析失败: {e}")
         continue
 
-# 2. 如果万一所有节点全部被连累（极端情况），生成警告提示项，保障订阅不中断
+# 2. 如果万一全部失败（极端情况），生成警告提示项
 if not reports:
-    print("\n🚨 警告：所有内置的中转镜像节点均由于某种原因未成功连通。")
+    print("\n🚨 警告：所有内置的中转镜像节点均未成功获取数据。")
     reports = [
         {
             "title": f"【系统同步异常】所有公共镜像通道暂不可用，同步时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             "url": "https://congress.gov",
             "number": "ALL_MIRRORS_FAILED",
-            "publishedAt": datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT"),
-            "description": "多源轮询均未成功获取到数据，可能是上游源发生变动。脚本将在下次定时自动重试。"
+            "publishedAt": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "description": "多源轮询均未成功获取到数据。脚本将在下次定时自动重试。"
         }
     ]
 
@@ -83,7 +82,20 @@ for r in reports:
     ET.SubElement(item, "title").text = r["title"]
     ET.SubElement(item, "link").text = r["url"]
     ET.SubElement(item, "guid", isPermaLink="false").text = r["number"]
-    ET.SubElement(item, "pubDate").text = r["publishedAt"] or datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+    
+    # 格式化时间为标准的 RSS pubDate 格式 (RFC 822)
+    raw_date = r["publishedAt"]
+    pub_str = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+    if raw_date:
+        try:
+            # RSSHub 返回的 JSON 时间通常是 ISO 格式，如 2023-10-24T12:00:00.000Z
+            clean_date = raw_date.replace("Z", "").split(".")[0]
+            pub_dt = datetime.strptime(clean_date, "%Y-%m-%dT%H:%M:%S")
+            pub_str = pub_dt.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        except Exception:
+            pass
+            
+    ET.SubElement(item, "pubDate").text = pub_str
     
     if r["description"]:
         ET.SubElement(item, "description").text = r["description"]
